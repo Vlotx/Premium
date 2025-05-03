@@ -9,7 +9,13 @@ local function notify(text)
 	})
 end
 
-local http_request = (syn and syn.request) or request
+local http_request = (syn and syn.request) or (http and http.request) or (fluxus and fluxus.request) or
+                         (krnl and krnl.request) or (request) or (http_request) or (httpc and httpc.request) or
+                         (game and game.HttpGet and function(tbl)
+        return {
+            Body = game:HttpGet(tbl.Url)
+        }
+    end)
 if not http_request then return end
 
 if _G.lastCheck and tick() - _G.lastCheck < 10 then
